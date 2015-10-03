@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
         }
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        ListView sidebar = (ListView) findViewById(R.id.sidebar);
+        ListView sidebar = (ListView) findViewById(R.id.devicelist);
         ArrayList<String> list = new ArrayList<>();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -67,15 +67,11 @@ public class MainActivity extends Activity {
         }
 
 
-
         sidebar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //Toast.makeText(MainActivity.this, "myPos " + position, Toast.LENGTH_LONG).show();
-                //Toast.makeText(MainActivity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
                 String MAC = parent.getAdapter().getItem(position).toString();
                 bluetoothService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC));
-
             }
         });
 
@@ -86,7 +82,7 @@ public class MainActivity extends Activity {
                 // Perform action on click
                 v.animate();
                 EditText text = (EditText) findViewById(R.id.editText);
-                //ConnectThread.write(text.getText().toString());
+                bluetoothService.write(text.getText().toString());
                 text.setText("");
             }
         });

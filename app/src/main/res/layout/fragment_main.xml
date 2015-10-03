@@ -5,14 +5,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivityFragment"
-        android:focusable="false">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/BTConnect">
+
+        <RelativeLayout
+            android:layout_above="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/volvo"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:text="Volvo 142"
+                android:textColor="@color/secondary"
+                android:textSize="12pt"
+                android:fontFamily="sans-serif-thin"
+                android:background="@color/white"
+
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:paddingTop="1pt"
+                android:paddingBottom="1pt"
+
+
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivityFragment"
+            android:focusable="false"
+            android:height="40px"
+            android:focusableInTouchMode="true">
+
+
+
 
             <EditText
                 android:layout_width="242dp"
@@ -35,21 +91,62 @@
                 android:width="150dp"
                 android:height="50dp" />
 
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="197dp"
-            android:layout_above="@+id/editText" />
-    </RelativeLayout>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tändning"
+                android:id="@+id/checkBox"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
-    <ListView
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Strålkastare fram/bak"
+                android:id="@+id/checkBox2"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/checkBox"
+                android:layout_centerHorizontal="true" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TUTAAAAAAAAA"
+                android:id="@+id/checkBox3"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/checkBox2"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/sidebar"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
+        android:background="#ffeeeeee"
+
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+
+
+        <CheckBox
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Tändning"
+            android:id="@+id/asdads"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <ListView
+            android:id="@+id/devicelist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

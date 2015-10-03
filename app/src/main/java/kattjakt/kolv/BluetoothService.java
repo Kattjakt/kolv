@@ -107,6 +107,12 @@ public class BluetoothService {
         this.state = State.NONE;
     }
 
+    public void write(String s) {
+        if (this.getState() == State.CONNECTED) {
+            this.connectedThread.write(s.getBytes());
+        }
+    }
+
     public class ConnectThread extends Thread {
         private BluetoothSocket socket;
         private BluetoothDevice device;
