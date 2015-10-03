@@ -150,7 +150,7 @@ public class BluetoothService {
         public ConnectThread(BluetoothDevice device) {
             this.device = device;
             try {
-                this.socket = device.createRfcommSocketToServiceRecord(SSP_UUID);
+                this.socket = device.createInsecureRfcommSocketToServiceRecord(SSP_UUID);
                 Log.d("CONNECT_THREAD", "Successfully created RFCOMM socket");
             } catch (IOException e) {
                 Log.d("CONNECT_THREAD", "Could not create RFCOMM socket: " + e.toString());
