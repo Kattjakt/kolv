@@ -50,7 +50,11 @@ public class BluetoothService {
     }
 
     public void connect(BluetoothDevice device) {
-        Log.d("BLUETOOTH_SERVICE", "Connecting to device ...");
+        if (state == State.CONNECTED && connectThread != null) {
+            Log.d("BLUETOOTH_SERVICE", "Disconnecting ...");
+            connectThread.cancel();
+            connectThread = null;
+        }
 
         if (state == State.CONNECTING && connectThread != null) {
             connectThread.cancel();
@@ -61,6 +65,8 @@ public class BluetoothService {
             connectedThread.cancel();
             connectedThread = null;
         }
+
+        Log.d("BLUETOOTH_SERVICE", "Connecting to device ...");
 
         this.state = State.CONNECTING;
 
@@ -89,6 +95,10 @@ public class BluetoothService {
 
     public void connectionFailed() {
         Log.d("BLUETOOTH_SERVICE", "Connection failed");
+
+        connectThread.cancel();
+        connectThread = null;
+
         this.state = State.NONE;
     }
 
