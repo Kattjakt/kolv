@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.LauncherActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ParcelUuid;
@@ -64,18 +65,24 @@ public class MainActivity extends Activity {
             }
         }
 
+        BluetoothService bluetoothService = new BluetoothService();
+        bluetoothService.connect(arduino);
 
         sidebar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Toast.makeText(MainActivity.this, "myPos " + position, Toast.LENGTH_LONG).show();
-                Toast.makeText(MainActivity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
+                String MAC = parent.getAdapter().getItem(position).toString();
+                //ConnectThread.connect(parent.getAdapter());
+
+
             }
         });
 
 
-        ConnectThread t = new ConnectThread(arduino);
-        t.start();
+        //ConnectThread t = new ConnectThread(arduino);
+        //t.start();
 
 
 
@@ -84,8 +91,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 // Perform action on click
                 v.animate();
-                EditText text = (EditText)findViewById(R.id.editText);
-                ConnectThread.write(text.getText().toString());
+                EditText text = (EditText) findViewById(R.id.editText);
+                //ConnectThread.write(text.getText().toString());
                 text.setText("");
             }
         });
