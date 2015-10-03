@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ public class MainActivity extends Activity {
 
         // Check if the unit has a bluetooth chip
         if (btadapter == null) {
-            //Toast toast = Toast.makeText(this, "Bluetooth is not supported on this device", Toast.LENGTH_LONG);
-            //toast.show();
+            Toast toast = Toast.makeText(this, "Bluetooth is not supported on this device", Toast.LENGTH_LONG);
+            toast.show();
         }
 
         // If bluetooth is disabled, prompt to enable it
@@ -43,27 +44,35 @@ public class MainActivity extends Activity {
         }
 
         Set<BluetoothDevice> pairedDevices = btadapter.getBondedDevices();
-
         ListView sidebar = (ListView) findViewById(R.id.sidebar);
-
-        ArrayList<String> list = new ArrayList<String>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        ArrayList<String> list = new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_expandable_list_item_1,
+                android.R.layout.simple_list_item_1,
                 list
         );
+        sidebar.setAdapter(adapter);
 
         BluetoothDevice arduino = null;
         if (pairedDevices.size() > 0) {
-                for (BluetoothDevice device : pairedDevices) {
+            for (BluetoothDevice device : pairedDevices) {
                 Log.d("BLUETOOTH_DEVICE", device.getAddress() + ", " + device.getName() + ", ");
-                list.add(device.getName());
+                list.add(device.getAddress());
                 adapter.notifyDataSetChanged();
+
                 arduino = device;
             }
         }
 
-        sidebar.setAdapter(adapter);
+
+        sidebar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Toast.makeText(MainActivity.this, "myPos " + position, Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         ConnectThread t = new ConnectThread(arduino);
         t.start();

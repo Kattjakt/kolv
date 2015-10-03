@@ -41,6 +41,11 @@ public class ConnectThread extends Thread {
         }
     }
 
+    public static void connect(BluetoothDevice device) {
+
+    }
+
+
     public ConnectThread(BluetoothDevice device) {
         Log.d("CONNECT_THREAD", "Creating RFCOMM socket... ");
         this.device = device;
