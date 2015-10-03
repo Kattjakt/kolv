@@ -33,7 +33,7 @@ public class BluetoothService {
         return this.state;
     }
 
-    public void start() {
+    public void terminate() {
         if (connectThread != null) {
             connectThread.cancel();
             connectThread = null;
@@ -49,6 +49,17 @@ public class BluetoothService {
 
     public void connect(BluetoothDevice device) {
         Log.d("BLUETOOTH_SERVICE", "Connecting to device ...");
+
+        if (state == State.CONNECTING && connectThread != null) {
+            connectThread.cancel();
+            connectThread = null;
+        }
+
+        if (connectedThread != null) {
+            connectedThread.cancel();
+            connectedThread = null;
+        }
+
         this.state = State.CONNECTING;
 
         connectThread = new ConnectThread(device);
@@ -57,9 +68,19 @@ public class BluetoothService {
 
     public void connected(BluetoothDevice device, BluetoothSocket socket) {
         Log.d("BLUETOOTH_SERVICE", "Successfully connected to: " + device.getName());
+
+        if (connectedThread != null) {
+            connectThread.cancel();
+            connectThread = null;
+        }
+
+        if (connectedThread != null) {
+            connectedThread.cancel();
+            connectedThread = null;
+        }
+
         this.state = State.CONNECTED;
 
-        connectThread.cancel();
         connectedThread = new ConnectedThread(socket);
         connectedThread.start();
     }
@@ -81,16 +102,15 @@ public class BluetoothService {
         public void cancel() {
             try {
                 socket.close();
-                return;
             } catch (IOException e) {
-                return;
+
             }
         }
 
         public void run() {
             setName("CONNECT_THREAD");
             adapter.cancelDiscovery();
-
+            Log.d("CONNECT_THREAD", "CURRENT STATE: " + state);
             try {
                 socket.connect();
             } catch(IOException connectException) {
@@ -102,8 +122,7 @@ public class BluetoothService {
                     Log.d("CONNECT_THREAD", "Could not close socket: " + closeException.toString());
                 }
 
-                // start();
-
+                //terminate();
                 return;
             }
 
@@ -113,12 +132,12 @@ public class BluetoothService {
         public ConnectThread(BluetoothDevice device) {
             this.device = device;
             try {
-                this.socket = device.createInsecureRfcommSocketToServiceRecord(SSP_UUID);
+                this.socket = device.createRfcommSocketToServiceRecord(SSP_UUID);
                 Log.d("CONNECT_THREAD", "Successfully created RFCOMM socket");
             } catch (IOException e) {
                 Log.d("CONNECT_THREAD", "Could not create RFCOMM socket: " + e.toString());
-                return;
             }
+            return;
 
         }
     }
