@@ -44,7 +44,8 @@ public class MainActivity extends Activity {
 
         Set<BluetoothDevice> pairedDevices = btadapter.getBondedDevices();
 
-        ListView myListView = (ListView) findViewById(R.id.listView);
+        ListView sidebar = (ListView) findViewById(R.id.sidebar);
+
         ArrayList<String> list = new ArrayList<String>();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
@@ -56,16 +57,13 @@ public class MainActivity extends Activity {
         if (pairedDevices.size() > 0) {
                 for (BluetoothDevice device : pairedDevices) {
                 Log.d("BLUETOOTH_DEVICE", device.getAddress() + ", " + device.getName() + ", ");
-//                  for (ParcelUuid uuid : device.getUuids()) {
-//                      Log.d("BLUETOOTH_DEVICE", uuid.toString());
-//                  }
                 list.add(device.getName());
                 adapter.notifyDataSetChanged();
                 arduino = device;
             }
         }
 
-        myListView.setAdapter(adapter);
+        sidebar.setAdapter(adapter);
 
         ConnectThread t = new ConnectThread(arduino);
         t.start();
