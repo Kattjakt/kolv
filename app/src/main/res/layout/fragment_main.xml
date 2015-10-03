@@ -17,53 +17,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:src="@drawable/volvo"
+            <ImageView
+                android:id="@+id/imageView"
+                android:src="@drawable/volvo"
 
-            android:adjustViewBounds="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
-            <TextView
+                android:adjustViewBounds="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
-                android:gravity="center"
-                android:text="Volvo 142"
-                android:textColor="@color/secondary"
-                android:textSize="12pt"
-                android:fontFamily="sans-serif-thin"
-                android:background="@color/white"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignBottom="@+id/imageView">
 
-                android:paddingLeft="10pt"
-                android:paddingRight="10pt"
-                android:paddingTop="1pt"
-                android:paddingBottom="1pt"
+                    <TextView
+                        android:id="@+id/headertext"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+                        android:text="Volvo 142"
+                        android:textColor="@color/secondary"
+                        android:textSize="12pt"
+                        android:fontFamily="sans-serif-thin"
+                        android:background="@color/white"
+
+                        android:paddingLeft="10pt"
+                        android:paddingRight="10pt"
+                        android:paddingTop="1pt"
+                        android:paddingBottom="1pt"
 
 
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentEnd="false" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5pt"
-                android:paddingRight="5pt"
-                android:paddingTop="2pt"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Ansluten till Slave"
-                android:id="@+id/textView"
-                android:layout_alignBottom="@id/imageView"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:background="@color/almostwhite"
-                android:textColor="@color/primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5pt"
+                        android:paddingRight="5pt"
+                        android:paddingTop="2pt"
+                        android:paddingBottom="2pt"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Ansluten till Slave"
+                        android:fontFamily="sans-serif-thin"
+                        android:id="@+id/textView"
 
+
+                        android:background="@color/white"
+                        android:textColor="@color/primary"
+
+                        android:layout_below="@+id/headertext"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2pt" />
+
+                </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout

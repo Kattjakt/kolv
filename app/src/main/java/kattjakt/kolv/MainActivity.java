@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
                 return view;
             }
         };
-        
+
         sidebar.setAdapter(adapter);
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
