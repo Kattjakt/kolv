@@ -12,11 +12,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,8 @@ public class MainActivity extends Activity {
 
     private BluetoothService bluetoothService;
     private BluetoothAdapter bluetoothAdapter;
+
+    ArrayList<BluetoothDevice> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +55,37 @@ public class MainActivity extends Activity {
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         ListView sidebar = (ListView) findViewById(R.id.devicelist);
-        ArrayList<String> list = new ArrayList<>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        /*ArrayList<String> list = new ArrayList<>();
+         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 list
-        );
+        );*/
 
+
+        ArrayAdapter adapter = new ArrayAdapter<BluetoothDevice>(
+                this,
+                android.R.layout.simple_list_item_2,
+                android.R.id.text1,
+                list
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                text1.setText(list.get(position).getName());
+                text2.setText(list.get(position).getAddress());
+                return view;
+            }
+        };
+        
         sidebar.setAdapter(adapter);
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 Log.d("BLUETOOTH_DEVICE", "Found device: " + device.getAddress() + ", " + device.getName() + ", ");
-                list.add(device.getAddress());
+                list.add(device);
                 adapter.notifyDataSetChanged();
             }
         }
