@@ -25,26 +25,30 @@ import java.util.Set;
 
 public class MainActivity extends Activity {
 
+    private BluetoothService bluetoothService;
+    private BluetoothAdapter bluetoothAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BluetoothAdapter btadapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothService = new BluetoothService();
 
         // Check if the unit has a bluetooth chip
-        if (btadapter == null) {
+        if (bluetoothAdapter == null) {
             Toast toast = Toast.makeText(this, "Bluetooth is not supported on this device", Toast.LENGTH_LONG);
             toast.show();
         }
 
         // If bluetooth is disabled, prompt to enable it
-        if (!btadapter.isEnabled()) {
+        if (!bluetoothAdapter.isEnabled()) {
             Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBT, 1);
         }
 
-        Set<BluetoothDevice> pairedDevices = btadapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         ListView sidebar = (ListView) findViewById(R.id.sidebar);
         ArrayList<String> list = new ArrayList<>();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -52,21 +56,17 @@ public class MainActivity extends Activity {
                 android.R.layout.simple_list_item_1,
                 list
         );
-        sidebar.setAdapter(adapter);
 
-        BluetoothDevice arduino = null;
+        sidebar.setAdapter(adapter);
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                Log.d("BLUETOOTH_DEVICE", device.getAddress() + ", " + device.getName() + ", ");
+                Log.d("BLUETOOTH_DEVICE", "Found device: " + device.getAddress() + ", " + device.getName() + ", ");
                 list.add(device.getAddress());
                 adapter.notifyDataSetChanged();
-
-                arduino = device;
             }
         }
 
-        BluetoothService bluetoothService = new BluetoothService();
-        bluetoothService.connect(arduino);
+
 
         sidebar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,16 +74,10 @@ public class MainActivity extends Activity {
                 //Toast.makeText(MainActivity.this, "myPos " + position, Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
                 String MAC = parent.getAdapter().getItem(position).toString();
-                //ConnectThread.connect(parent.getAdapter());
-
+                bluetoothService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC));
 
             }
         });
-
-
-        //ConnectThread t = new ConnectThread(arduino);
-        //t.start();
-
 
 
         final Button button = (Button) findViewById(R.id.BTConnect);

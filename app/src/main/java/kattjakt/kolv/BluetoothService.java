@@ -3,7 +3,9 @@ package kattjakt.kolv;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,14 +105,14 @@ public class BluetoothService {
             try {
                 socket.close();
             } catch (IOException e) {
-
+                Log.d("CONNECT_THREAD", "Failed to close socket: " + e.toString());
             }
         }
 
         public void run() {
             setName("CONNECT_THREAD");
             adapter.cancelDiscovery();
-            Log.d("CONNECT_THREAD", "CURRENT STATE: " + state);
+
             try {
                 socket.connect();
             } catch(IOException connectException) {
@@ -152,6 +154,7 @@ public class BluetoothService {
                 socket.close();
                 return;
             } catch (IOException ioexception) {
+                Log.d("CONNECTED_THREAD", "Failed to close socket: " + ioexception.toString());
                 return;
             }
         }
@@ -172,7 +175,7 @@ public class BluetoothService {
             try {
                 outputStream.write(data);
             } catch (IOException e) {
-                Log.d("CONNECTED_THREAD", "Failed to send data: " + e);
+                Log.d("CONNECTED_THREAD", "Failed to send data: " + e.toString());
                 return;
             }
             Log.d("CONNECTED_THREAD", "Successfully sent data: " + data.toString());
@@ -187,6 +190,7 @@ public class BluetoothService {
                 Log.d("CONNECTED_THREAD", "Failed to create input/output streams");
             }
             Log.d("CONNECTED_THREAD", "Successfully created input/output streams");
+            write("hello".getBytes());
         }
     }
 }
