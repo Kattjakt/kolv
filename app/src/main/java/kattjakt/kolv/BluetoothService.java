@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BluetoothService {
 
     private final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-    private final UUID SSP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+    private static final UUID SSP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
