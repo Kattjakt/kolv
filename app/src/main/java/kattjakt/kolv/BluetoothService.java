@@ -54,7 +54,7 @@ public class BluetoothService {
             connectedThread = null;
         }
 
-        Log.d("BLUETOOTH_SERVICE", "Connecting to device ...");
+        Log.d("BLUETOOTH_SERVICE", "Connecting to: " + device.getName() + "(" + device.getAddress() + ")");
 
         this.state = State.CONNECTING;
 
@@ -162,6 +162,7 @@ public class BluetoothService {
                     } catch(IOException closeException) {
                         Log.d("CONNECT_THREAD", "Could not close socket: " + closeException.toString());
                     }
+
                 }
 
                 //terminate();
