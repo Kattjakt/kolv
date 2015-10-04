@@ -81,8 +81,12 @@ public class BluetoothService {
         connectedThread.start();
 
         // Add Toast
-        handler.sendEmptyMessage(1);
-        handler.sendEmptyMessage(2);
+        handler.sendEmptyMessage(MainActivity.MessageTypes.TOAST_CONNECTION_SUCCESS);
+
+        Message message = new Message();
+        message.obj = device.getName();
+        message.what = MainActivity.MessageTypes.SHOW_CONNECTION_STATUS;
+        handler.sendMessage(message);
     }
 
     public void connectionFailed() {
@@ -94,14 +98,14 @@ public class BluetoothService {
         this.state = State.NONE;
 
         // Add toast
-        handler.sendEmptyMessage(0);
+        handler.sendEmptyMessage(MainActivity.MessageTypes.TOAST_CONNECTION_FAILURE);
     }
 
     public void connectionLost() {
         Log.d("BLUETOOTH_SERVICE", "Connection lost");
         this.state = State.NONE;
 
-        handler.sendEmptyMessage(3);
+        handler.sendEmptyMessage(MainActivity.MessageTypes.HIDE_CONNECTION_STATUS);
     }
 
     public synchronized void stop() {

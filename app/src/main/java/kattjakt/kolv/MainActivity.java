@@ -38,26 +38,36 @@ public class MainActivity extends Activity {
 
     private ProgressDialog progressDialog;
     private ArrayList<BluetoothDevice> list = new ArrayList<>();
+
+    public class MessageTypes {
+        static final int TOAST_CONNECTION_FAILURE = 0;
+        static final int TOAST_CONNECTION_SUCCESS = 1;
+        static final int SHOW_CONNECTION_STATUS = 2;
+        static final int HIDE_CONNECTION_STATUS = 3;
+
+    }
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            progressDialog.dismiss();
-
-            if (msg.what == 0) {
+            if (msg.what == MessageTypes.TOAST_CONNECTION_FAILURE) {
+                progressDialog.dismiss();
                 Toast toast = Toast.makeText(MainActivity.this, "Failed to connect", Toast.LENGTH_LONG);
                 toast.show();
             }
 
-            if (msg.what == 1) {
+            if (msg.what == MessageTypes.TOAST_CONNECTION_SUCCESS) {
+                progressDialog.dismiss();
                 Toast toast = Toast.makeText(MainActivity.this, "Successfully connected", Toast.LENGTH_LONG);
                 toast.show();
             }
 
-            if (msg.what == 2) {
+            if (msg.what == MessageTypes.SHOW_CONNECTION_STATUS) {
                 TextView connectedText = (TextView) findViewById(R.id.connected);
                 connectedText.setVisibility(View.VISIBLE);
+                connectedText.setText(msg.obj.toString());
             }
 
-            if (msg.what == 3) {
+            if (msg.what == MessageTypes.HIDE_CONNECTION_STATUS) {
                 TextView connectedText = (TextView) findViewById(R.id.connected);
                 connectedText.setVisibility(View.INVISIBLE);
             }
@@ -121,7 +131,7 @@ public class MainActivity extends Activity {
                 String MAC = parent.getAdapter().getItem(position).toString();
 
                 progressDialog = new ProgressDialog(MainActivity.this, android.R.style.Theme_Material_Light_Dialog);
-                progressDialog.setCancelable(true);
+                progressDialog.setCancelable(false);
                 progressDialog.setMessage("Ansluter till " + MAC);
                 progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
                 progressDialog.show();

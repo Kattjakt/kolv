@@ -67,7 +67,6 @@
                         android:paddingTop="2pt"
                         android:paddingBottom="2pt"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Ansluten till Slave"
                         android:fontFamily="sans-serif-thin"
                         android:id="@+id/connected"
 
