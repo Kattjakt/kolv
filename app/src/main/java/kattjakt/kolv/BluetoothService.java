@@ -97,7 +97,9 @@ public class BluetoothService {
         connectedThread = new ConnectedThread(socket);
         connectedThread.start();
 
+        // Add Toast
         handler.sendEmptyMessage(1);
+        handler.sendEmptyMessage(2);
     }
 
     public void connectionFailed() {
@@ -108,12 +110,15 @@ public class BluetoothService {
 
         this.state = State.NONE;
 
+        // Add toast
         handler.sendEmptyMessage(0);
     }
 
     public void connectionLost() {
         Log.d("BLUETOOTH_SERVICE", "Connection lost");
         this.state = State.NONE;
+
+        handler.sendEmptyMessage(3);
     }
 
     public void write(String s) {

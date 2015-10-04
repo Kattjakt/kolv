@@ -51,6 +51,16 @@ public class MainActivity extends Activity {
                 Toast toast = Toast.makeText(MainActivity.this, "Successfully connected", Toast.LENGTH_LONG);
                 toast.show();
             }
+
+            if (msg.what == 2) {
+                TextView connectedText = (TextView) findViewById(R.id.connected);
+                connectedText.setVisibility(View.VISIBLE);
+            }
+
+            if (msg.what == 3) {
+                TextView connectedText = (TextView) findViewById(R.id.connected);
+                connectedText.setVisibility(View.INVISIBLE);
+            }
         }
     };
 
