@@ -2,11 +2,15 @@ package kattjakt.kolv;
 
 import android.app.Activity;
 import android.app.LauncherActivity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.Menu;
@@ -31,7 +35,24 @@ public class MainActivity extends Activity {
     private BluetoothService bluetoothService;
     private BluetoothAdapter bluetoothAdapter;
 
-    ArrayList<BluetoothDevice> list = new ArrayList<>();
+
+    private ProgressDialog progressDialog;
+    private ArrayList<BluetoothDevice> list = new ArrayList<>();
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            progressDialog.dismiss();
+
+            if (msg.what == 0) {
+                Toast toast = Toast.makeText(MainActivity.this, "Failed to connect", Toast.LENGTH_LONG);
+                toast.show();
+            }
+
+            if (msg.what == 1) {
+                Toast toast = Toast.makeText(MainActivity.this, "Successfully connected", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +60,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        bluetoothService = new BluetoothService();
+        bluetoothService = new BluetoothService(handler);
 
         // Check if the unit has a bluetooth chip
         if (bluetoothAdapter == null) {
@@ -55,13 +76,6 @@ public class MainActivity extends Activity {
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         ListView sidebar = (ListView) findViewById(R.id.devicelist);
-        /*ArrayList<String> list = new ArrayList<>();
-         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                list
-        );*/
-
 
         ArrayAdapter adapter = new ArrayAdapter<BluetoothDevice>(
                 this,
@@ -95,7 +109,16 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 String MAC = parent.getAdapter().getItem(position).toString();
+
+                progressDialog = new ProgressDialog(MainActivity.this, android.R.style.Theme_Material_Light_Dialog);
+                progressDialog.setCancelable(true);
+                progressDialog.setMessage("Ansluter till " + MAC);
+                progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
+                progressDialog.show();
+
                 bluetoothService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC));
+
+
             }
         });
 

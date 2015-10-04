@@ -3,9 +3,9 @@ package kattjakt.kolv;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,7 @@ public class BluetoothService {
 
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
+    private Handler handler;
 
     private class State {
         static final int CONNECTED = 2;
@@ -30,6 +31,10 @@ public class BluetoothService {
     }
 
     private int state = State.NONE;
+
+    public BluetoothService(Handler handler) {
+        this.handler = handler;
+    }
 
     public int getState() {
         return this.state;
@@ -91,6 +96,8 @@ public class BluetoothService {
 
         connectedThread = new ConnectedThread(socket);
         connectedThread.start();
+
+        handler.sendEmptyMessage(1);
     }
 
     public void connectionFailed() {
@@ -100,6 +107,8 @@ public class BluetoothService {
         connectThread = null;
 
         this.state = State.NONE;
+
+        handler.sendEmptyMessage(0);
     }
 
     public void connectionLost() {
