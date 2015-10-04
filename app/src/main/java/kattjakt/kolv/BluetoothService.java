@@ -163,12 +163,9 @@ public class BluetoothService {
                         Log.d("CONNECT_THREAD", "Could not close socket: " + closeException.toString());
                     }
 
+                    return;
                 }
-
-                //terminate();
-                return;
             }
-
             connected(device, socket);
         }
 

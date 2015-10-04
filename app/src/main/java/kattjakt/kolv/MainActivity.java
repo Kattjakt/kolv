@@ -126,6 +126,7 @@ public class MainActivity extends Activity {
                 progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
                 progressDialog.show();
 
+                bluetoothService.stop();
                 bluetoothService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC));
 
 
