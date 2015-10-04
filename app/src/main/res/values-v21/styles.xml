@@ -11,11 +11,5 @@
         <item name="android:colorButtonNormal">@color/primary</item>
     </style>
 
-    <style name="AppTheme.MyDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
 </resources>
 
