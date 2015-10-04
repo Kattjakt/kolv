@@ -10,6 +10,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
@@ -40,33 +41,15 @@ public class BluetoothService {
         return this.state;
     }
 
-    public void terminate() {
-        if (connectThread != null) {
-            connectThread.cancel();
-            connectThread = null;
-        }
-
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
-
-        state = State.NONE;
-    }
-
-    public void connect(BluetoothDevice device) {
-        if (state == State.CONNECTED && connectThread != null) {
-            Log.d("BLUETOOTH_SERVICE", "Disconnecting ...");
-            connectThread.cancel();
-            connectThread = null;
-        }
-
+    public synchronized void connect(BluetoothDevice device) {
         if (state == State.CONNECTING && connectThread != null) {
+            Log.d("BLUETOOTH_SERVICE", "Killing thread with 'CONNECTING' state ...");
             connectThread.cancel();
             connectThread = null;
         }
 
         if (connectedThread != null) {
+            Log.d("BLUETOOTH_SERVICE", "Disconnecting ...");
             connectedThread.cancel();
             connectedThread = null;
         }
@@ -79,7 +62,7 @@ public class BluetoothService {
         connectThread.start();
     }
 
-    public void connected(BluetoothDevice device, BluetoothSocket socket) {
+    public synchronized void connected(BluetoothDevice device, BluetoothSocket socket) {
         Log.d("BLUETOOTH_SERVICE", "Successfully connected to: " + device.getName());
 
         if (connectedThread != null) {
@@ -121,6 +104,20 @@ public class BluetoothService {
         handler.sendEmptyMessage(3);
     }
 
+    public synchronized void stop() {
+        if (connectThread != null) {
+            connectThread.cancel();
+            connectThread = null;
+        }
+
+        if (connectedThread != null) {
+            connectedThread.cancel();
+            connectedThread = null;
+        }
+
+        this.state = State.NONE;
+    }
+
     public void write(String s) {
         if (this.getState() == State.CONNECTED) {
             this.connectedThread.write(s.getBytes());
@@ -145,13 +142,26 @@ public class BluetoothService {
 
             try {
                 socket.connect();
-            } catch(IOException connectException) {
+             } catch(IOException connectException) {
                 Log.d("CONNECT_THREAD", "Could not connect: " + connectException.toString());
-                connectionFailed();
+                Log.d("CONNECT_THREAD", "Trying fallback ...");
+
                 try {
-                    socket.close();
-                } catch(IOException closeException) {
-                    Log.d("CONNECT_THREAD", "Could not close socket: " + closeException.toString());
+                    socket = (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(device,1);
+                    socket.connect();
+
+                    Log.d("CONNECT_THREAD", "Fallback succeded!");
+
+                } catch (Exception e) {
+                    Log.d("CONNECT_THREAD", "Fallback failed as well");
+
+                    connectionFailed();
+
+                    try {
+                        socket.close();
+                    } catch(IOException closeException) {
+                        Log.d("CONNECT_THREAD", "Could not close socket: " + closeException.toString());
+                    }
                 }
 
                 //terminate();
