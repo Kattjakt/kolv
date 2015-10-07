@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -124,7 +126,8 @@ public class BluetoothService {
 
     public void write(String s) {
         if (this.getState() == State.CONNECTED) {
-            this.connectedThread.write(s.getBytes());
+            s += "\n";
+            this.connectedThread.write_raw(s.getBytes());
         }
     }
 
@@ -203,24 +206,41 @@ public class BluetoothService {
 
         public void run() {
             byte data[] = new byte[1024];
+            String total = "";
             try {
                 do {
-                    int i = inputStream.read(data);
-                    Log.d("CONNECTED_THREAD", "Recieved data: " + data);
+                    // Get the total number of bytes received
+                    int bytes = inputStream.read(data);
+
+                    // Remove trailing uninitialized characters
+                    String decoded = new String(data, "UTF-8").replaceAll("\u0000.*", "");
+
+                    // Remove trailing characters from last read
+                    String received = decoded.substring(0, bytes);
+                    for (char c : received.toCharArray()) {
+                        if (c == '\n') {
+                            Log.d("CONNECTED_THREAD", "Received data: " + total);
+                            total = "";
+                        } else {
+                            total += c;
+                        }
+                    }
                 } while (true);
             } catch (IOException ioexception) {
                 connectionLost();
+
             }
         }
 
-        public void write(byte data[]) {
+        public void write_raw(byte data[]) {
             try {
                 outputStream.write(data);
             } catch (IOException e) {
                 Log.d("CONNECTED_THREAD", "Failed to send data: " + e.toString());
                 return;
             }
-            Log.d("CONNECTED_THREAD", "Successfully sent data: " + data.toString());
+            String decoded = new String(data);
+            Log.d("CONNECTED_THREAD", "Successfully sent data: " + decoded);
         }
 
         public ConnectedThread(BluetoothSocket socket) {
@@ -232,7 +252,6 @@ public class BluetoothService {
                 Log.d("CONNECTED_THREAD", "Failed to create input/output streams");
             }
             Log.d("CONNECTED_THREAD", "Successfully created input/output streams");
-            write("hello".getBytes());
         }
     }
 }

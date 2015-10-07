@@ -20,9 +20,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -138,10 +141,17 @@ public class MainActivity extends Activity {
 
                 bluetoothService.stop();
                 bluetoothService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC));
-
-
             }
         });
+
+        CheckBox headlight = (CheckBox)findViewById(R.id.headlight);
+        headlight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                bluetoothService.write("headlight(" + (isChecked ? "on" : "off") + ")");
+                 }
+             }
+        );
 
 
         final Button button = (Button) findViewById(R.id.BTConnect);
@@ -154,8 +164,6 @@ public class MainActivity extends Activity {
                 text.setText("");
             }
         });
-
-
     }
 
 

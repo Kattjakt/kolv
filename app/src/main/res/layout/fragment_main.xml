@@ -192,8 +192,8 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Heljus"
-                android:id="@+id/checkBox6"
+                android:text="Helljus"
+                android:id="@+id/headlight"
                 android:checked="false"
                 android:layout_below="@+id/checkBox5"
                 android:layout_alignStart="@+id/checkBox5" />
