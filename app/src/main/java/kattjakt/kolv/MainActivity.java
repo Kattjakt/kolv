@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends Activity {
@@ -47,6 +49,7 @@ public class MainActivity extends Activity {
         static final int TOAST_CONNECTION_SUCCESS = 1;
         static final int SHOW_CONNECTION_STATUS = 2;
         static final int HIDE_CONNECTION_STATUS = 3;
+        static final int HARDWARE_STATE = 4;
 
     }
 
@@ -73,6 +76,25 @@ public class MainActivity extends Activity {
             if (msg.what == MessageTypes.HIDE_CONNECTION_STATUS) {
                 TextView connectedText = (TextView) findViewById(R.id.connected);
                 connectedText.setVisibility(View.INVISIBLE);
+            }
+
+            if (msg.what == MessageTypes.HARDWARE_STATE) {
+                List<String> args = (List<String>)msg.obj;
+
+                int id = 0;
+                switch (args.get(0)) {
+                    case "headlight": id = R.id.headlight; break;
+                    case "blinkers_left": id = R.id.blinkers_left; break;
+                    case "blinkers_right": id = R.id.blinkers_right; break;
+                }
+
+                boolean checked = (args.get(1).equals("1") ? true : false);
+
+                Log.d("CONNECTED_THREAD", "Set value [" + checked + "] for: " + args.get(0));
+
+                CheckBox checkBox = (CheckBox)findViewById(id);
+                checkBox.setChecked(checked);
+
             }
         }
     };
@@ -146,13 +168,30 @@ public class MainActivity extends Activity {
 
         CheckBox headlight = (CheckBox)findViewById(R.id.headlight);
         headlight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                bluetoothService.write("headlight(" + (isChecked ? "on" : "off") + ")");
-                 }
-             }
+             @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            bluetoothService.write("headlight(" + (isChecked ? "on" : "off") + ")");
+        }
+    }
         );
 
+        CheckBox blinkers_left = (CheckBox)findViewById(R.id.blinkers_left);
+        blinkers_left.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             @Override
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                 bluetoothService.write("blinkers_left(" + (isChecked ? "on" : "off") + ")");
+             }
+         }
+        );
+
+        CheckBox blinkers_right = (CheckBox)findViewById(R.id.blinkers_right);
+        blinkers_right.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             @Override
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                 bluetoothService.write("blinkers_right(" + (isChecked ? "on" : "off") + ")");
+             }
+         }
+        );
 
         final Button button = (Button) findViewById(R.id.BTConnect);
         button.setOnClickListener(new View.OnClickListener() {

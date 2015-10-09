@@ -173,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Blinkers höger"
-                android:id="@+id/checkBox4"
+                android:id="@+id/blinkers_right"
                 android:checked="false"
                 android:layout_alignTop="@+id/checkBox2"
                 android:layout_alignEnd="@+id/view"
@@ -184,10 +184,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Blinkers vänster"
-                android:id="@+id/checkBox5"
+                android:id="@+id/blinkers_left"
                 android:checked="false"
-                android:layout_below="@+id/checkBox4"
-                android:layout_alignStart="@+id/checkBox4" />
+                android:layout_below="@+id/blinkers_right"
+                android:layout_alignStart="@+id/blinkers_right" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -195,8 +195,8 @@
                 android:text="Helljus"
                 android:id="@+id/headlight"
                 android:checked="false"
-                android:layout_below="@+id/checkBox5"
-                android:layout_alignStart="@+id/checkBox5" />
+                android:layout_below="@+id/blinkers_left"
+                android:layout_alignStart="@+id/blinkers_left" />
 
             <TextView
                 android:layout_width="wrap_content"

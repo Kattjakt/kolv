@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -89,6 +91,8 @@ public class BluetoothService {
         message.obj = device.getName();
         message.what = MainActivity.MessageTypes.SHOW_CONNECTION_STATUS;
         handler.sendMessage(message);
+
+        write("Connected");
     }
 
     public void connectionFailed() {
@@ -129,6 +133,23 @@ public class BluetoothService {
             s += "\n";
             this.connectedThread.write_raw(s.getBytes());
         }
+    }
+
+    public void handle(String s) {
+        int argstart = s.indexOf('(');
+        int argend   = s.indexOf(')');
+
+        String command = s.substring(0, argstart);
+        String args_raw = s.substring(argstart + 1, argend);
+
+        List<String> args = Arrays.asList(args_raw.split(","));
+        if (command.equals("State")) {
+            Message message = new Message();
+            message.obj = args;
+            message.what = MainActivity.MessageTypes.HARDWARE_STATE;
+            handler.sendMessage(message);
+        }
+
     }
 
     public class ConnectThread extends Thread {
@@ -220,6 +241,7 @@ public class BluetoothService {
                     for (char c : received.toCharArray()) {
                         if (c == '\n') {
                             Log.d("CONNECTED_THREAD", "Received data: " + total);
+                            handle(total);
                             total = "";
                         } else {
                             total += c;
